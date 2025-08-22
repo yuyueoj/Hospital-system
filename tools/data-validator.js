@@ -64,7 +64,7 @@ class DataValidator {
     const errors = [];
     
     // 必填字段验证
-    const requiredFields = ['医生姓名', '医院名称', '科室名称'];
+    const requiredFields = ['医生姓名', '医院名称', '科室'];
     requiredFields.forEach(field => {
       if (!row[field] || row[field].toString().trim() === '') {
         errors.push(`第${rowNumber}行: 缺少必填字段 "${field}"`);
@@ -72,17 +72,33 @@ class DataValidator {
     });
 
     // 数据格式验证
-    if (row['联系电话'] && !this.validatePhone(row['联系电话'])) {
-      errors.push(`第${rowNumber}行: 联系电话格式不正确 "${row['联系电话']}"`);
+    if (row['医生照片'] && !this.validateUrl(row['医生照片'])) {
+      errors.push(`第${rowNumber}行: 医生照片链接格式不正确 "${row['医生照片']}"`);
     }
 
     // 数据长度验证
-    if (row['医生姓名'] && row['医生姓名'].toString().length > 20) {
-      errors.push(`第${rowNumber}行: 医生姓名过长（超过20个字符）`);
+    if (row['医生姓名'] && row['医生姓名'].toString().length > 10) {
+      errors.push(`第${rowNumber}行: 医生姓名过长（超过10个字符）`);
     }
 
-    if (row['个人简介'] && row['个人简介'].toString().length > 500) {
-      errors.push(`第${rowNumber}行: 个人简介过长（超过500个字符）`);
+    if (row['医生职称'] && row['医生职称'].toString().length > 30) {
+      errors.push(`第${rowNumber}行: 医生职称过长（超过30个字符）`);
+    }
+
+    if (row['擅长病症'] && row['擅长病症'].toString().length > 100) {
+      errors.push(`第${rowNumber}行: 擅长病症过长（超过100个字符）`);
+    }
+
+    if (row['医生介绍'] && row['医生介绍'].toString().length > 300) {
+      errors.push(`第${rowNumber}行: 医生介绍过长（超过300个字符）`);
+    }
+
+    if (row['医院名称'] && row['医院名称'].toString().length > 20) {
+      errors.push(`第${rowNumber}行: 医院名称过长（超过20个字符）`);
+    }
+
+    if (row['科室'] && row['科室'].toString().length > 20) {
+      errors.push(`第${rowNumber}行: 科室名称过长（超过20个字符）`);
     }
 
     // 记录错误
@@ -101,6 +117,18 @@ class DataValidator {
     const phoneRegex = /^[\d\-\s\(\)]+$/;
     const cleanPhone = phone.toString().replace(/[\s\-\(\)]/g, '');
     return phoneRegex.test(phone) && cleanPhone.length >= 7 && cleanPhone.length <= 15;
+  }
+
+  /**
+   * 验证URL格式
+   */
+  validateUrl(url) {
+    try {
+      const urlRegex = /^https?:\/\/.+/i;
+      return urlRegex.test(url.toString().trim());
+    } catch (error) {
+      return false;
+    }
   }
 
   /**

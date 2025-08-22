@@ -32,25 +32,23 @@ App({
             doctors: [
               {
                 id: 1001,
-                name: "张医生",
-                title: "主任医师",
-                specialty: "心血管内科",
-                experience: "15年",
-                education: "北京医科大学",
-                phone: "010-69156001",
-                schedule: "周一至周五 8:00-17:00",
-                introduction: "擅长冠心病、高血压、心律失常等疾病的诊治"
+                name: "张建华",
+                photo: "https://example.com/photos/doctor1.jpg",
+                title: "主任医师、教授",
+                specialties: "冠心病、高血压、心律失常、心力衰竭",
+                introduction: "从事心血管内科临床工作20余年，擅长冠心病介入治疗、高血压的个体化治疗、各种心律失常的诊断与治疗。发表学术论文50余篇，主持省级科研项目3项。",
+                // 保持向后兼容
+                specialty: "心血管内科"
               },
               {
                 id: 1002,
-                name: "李医生", 
-                title: "副主任医师",
-                specialty: "消化内科",
-                experience: "12年",
-                education: "清华大学医学院",
-                phone: "010-69156002",
-                schedule: "周二至周六 9:00-18:00",
-                introduction: "专业从事胃肠疾病、肝胆疾病的诊治"
+                name: "李明华", 
+                photo: "https://example.com/photos/doctor2.jpg",
+                title: "副主任医师、副教授",
+                specialties: "胃肠道疾病、肝胆疾病、消化道肿瘤",
+                introduction: "消化内科专业，具有丰富的临床经验。擅长胃肠镜检查与治疗，对消化道肿瘤的早期诊断有独到见解。多次参与国际学术交流。",
+                // 保持向后兼容
+                specialty: "消化内科"
               }
             ]
           },
@@ -61,14 +59,13 @@ App({
             doctors: [
               {
                 id: 1003,
-                name: "王医生",
-                title: "主任医师",
-                specialty: "普外科",
-                experience: "20年",
-                education: "北京大学医学部",
-                phone: "010-69156003",
-                schedule: "周一至周五 8:00-16:00",
-                introduction: "擅长腹腔镜手术、胃肠道肿瘤手术"
+                name: "王志强",
+                photo: "https://example.com/photos/doctor3.jpg",
+                title: "主任医师、科室主任",
+                specialties: "腹腔镜手术、胃肠道肿瘤、疝气手术、胆囊疾病",
+                introduction: "普外科专家，从事外科临床工作25年。精通各类腹腔镜微创手术，在胃肠道肿瘤综合治疗方面有丰富经验。担任多个学术组织委员。",
+                // 保持向后兼容
+                specialty: "普外科"
               }
             ]
           }
@@ -88,14 +85,13 @@ App({
             doctors: [
               {
                 id: 2001,
-                name: "赵医生",
-                title: "主任医师",
-                specialty: "神经内科",
-                experience: "18年",
-                education: "北京大学医学部",
-                phone: "010-83572001",
-                schedule: "周一至周四 8:30-17:30",
-                introduction: "专攻脑血管疾病、癫痫、帕金森病的治疗"
+                name: "赵丽娟",
+                photo: "https://example.com/photos/doctor4.jpg",
+                title: "主任医师、博士生导师",
+                specialties: "脑血管疾病、癫痫、帕金森病、认知障碍、头痛",
+                introduction: "神经内科资深专家，博士学位。在脑血管病的预防和治疗、癫痫的规范化治疗、帕金森病的综合管理等方面有深入研究。主编专著2部。",
+                // 保持向后兼容
+                specialty: "神经内科"
               }
             ]
           }
@@ -111,7 +107,9 @@ App({
       hospital.departments.forEach(department => {
         department.doctors.forEach(doctor => {
           if (doctor.name.includes(keyword) || 
-              doctor.specialty.includes(keyword) ||
+              (doctor.specialties && doctor.specialties.includes(keyword)) ||
+              (doctor.specialty && doctor.specialty.includes(keyword)) ||
+              doctor.title.includes(keyword) ||
               doctor.introduction.includes(keyword) ||
               hospital.name.includes(keyword) ||
               department.name.includes(keyword)) {

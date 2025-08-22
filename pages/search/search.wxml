@@ -69,8 +69,11 @@
         data-doctor-id="{{item.id}}"
       >
         <view class="result-card">
-          <view class="doctor-avatar">
-            <text class="avatar-text">{{item.name.charAt(0)}}</text>
+          <view class="doctor-photo">
+            <image wx:if="{{item.photo}}" src="{{item.photo}}" mode="aspectFill" class="result-photo"></image>
+            <view wx:else class="doctor-avatar">
+              <text class="avatar-text">{{item.name.charAt(0)}}</text>
+            </view>
           </view>
           <view class="doctor-info">
             <view class="doctor-name">{{item.name}}</view>
@@ -78,7 +81,10 @@
             <view class="doctor-location">
               <text class="location-text">{{item.hospitalName}} - {{item.departmentName}}</text>
             </view>
-            <view class="doctor-specialty">{{item.specialty}}</view>
+            <view class="doctor-specialties" wx:if="{{item.specialties}}">
+              <text class="specialties-label">擅长：</text>
+              <text class="specialties-text">{{item.specialties}}</text>
+            </view>
           </view>
           <view class="result-arrow">▶</view>
         </view>

@@ -13,16 +13,28 @@
   color: white;
 }
 
+.doctor-photo-large {
+  width: 140rpx;
+  height: 140rpx;
+  margin-right: 30rpx;
+  flex-shrink: 0;
+}
+
+.photo-large {
+  width: 100%;
+  height: 100%;
+  border-radius: 16rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
 .doctor-avatar-large {
-  width: 120rpx;
-  height: 120rpx;
+  width: 140rpx;
+  height: 140rpx;
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
+  border-radius: 16rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 30rpx;
-  flex-shrink: 0;
 }
 
 .avatar-text {
@@ -51,8 +63,8 @@
   margin-bottom: 12rpx;
 }
 
-.doctor-specialty {
-  font-size: 28rpx;
+.doctor-hospital {
+  font-size: 26rpx;
   opacity: 0.9;
   line-height: 1.4;
 }
@@ -157,6 +169,50 @@
 .introduction-text {
   font-size: 26rpx;
   color: #555;
+  line-height: 1.8;
+}
+
+.specialties-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 8rpx;
+}
+
+.specialty-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  line-height: 1.2;
+}
+
+.consultation-info {
+  background: #f8f9fa;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  border-left: 4rpx solid #4a90e2;
+}
+
+.consultation-text {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.consultation-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.tip-item {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
 }
 
 .bottom-actions {

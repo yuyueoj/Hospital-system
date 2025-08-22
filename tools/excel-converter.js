@@ -68,7 +68,7 @@ class ExcelConverter {
    * 数据清理和验证
    */
   cleanAndValidateData(rawData) {
-    const requiredFields = ['医生姓名', '医院名称', '科室名称'];
+    const requiredFields = ['医生姓名', '医院名称', '科室'];
     
     return rawData.filter((row, index) => {
       // 检查必填字段
@@ -78,23 +78,52 @@ class ExcelConverter {
           return false;
         }
       }
+      
+      // 验证字段长度
+      if (row['医生姓名'] && row['医生姓名'].toString().length > 10) {
+        console.warn(`第 ${index + 2} 行医生姓名超长: ${row['医生姓名']}`);
+        return false;
+      }
+      
+      if (row['医生职称'] && row['医生职称'].toString().length > 30) {
+        console.warn(`第 ${index + 2} 行医生职称超长: ${row['医生职称']}`);
+        return false;
+      }
+      
+      if (row['擅长病症'] && row['擅长病症'].toString().length > 100) {
+        console.warn(`第 ${index + 2} 行擅长病症超长: ${row['擅长病症']}`);
+        return false;
+      }
+      
+      if (row['医生介绍'] && row['医生介绍'].toString().length > 300) {
+        console.warn(`第 ${index + 2} 行医生介绍超长: ${row['医生介绍']}`);
+        return false;
+      }
+      
+      if (row['医院名称'] && row['医院名称'].toString().length > 20) {
+        console.warn(`第 ${index + 2} 行医院名称超长: ${row['医院名称']}`);
+        return false;
+      }
+      
+      if (row['科室'] && row['科室'].toString().length > 20) {
+        console.warn(`第 ${index + 2} 行科室名称超长: ${row['科室']}`);
+        return false;
+      }
+      
       return true;
     }).map(row => {
       // 数据清理和标准化
       return {
         doctorName: row['医生姓名']?.toString().trim(),
+        doctorPhoto: row['医生照片']?.toString().trim() || '',
+        doctorTitle: row['医生职称']?.toString().trim() || '医师',
+        specialties: row['擅长病症']?.toString().trim() || '',
+        introduction: row['医生介绍']?.toString().trim() || '经验丰富的医疗专家',
         hospitalName: row['医院名称']?.toString().trim(),
-        departmentName: row['科室名称']?.toString().trim(),
-        title: row['职称']?.toString().trim() || '医师',
-        specialty: row['专业领域']?.toString().trim() || row['科室名称']?.toString().trim(),
-        experience: row['从业经验']?.toString().trim() || '多年',
-        education: row['毕业院校']?.toString().trim() || '医学院校',
-        phone: row['联系电话']?.toString().trim() || '',
-        schedule: row['出诊时间']?.toString().trim() || '请咨询医院',
-        introduction: row['个人简介']?.toString().trim() || '经验丰富的医疗专家',
-        hospitalAddress: row['医院地址']?.toString().trim() || '',
-        hospitalPhone: row['医院电话']?.toString().trim() || '',
-        departmentDescription: row['科室描述']?.toString().trim() || ''
+        departmentName: row['科室']?.toString().trim(),
+        // 保持向后兼容
+        specialty: row['擅长病症']?.toString().trim() || row['科室']?.toString().trim(),
+        title: row['医生职称']?.toString().trim() || '医师'
       };
     });
   }
@@ -132,13 +161,12 @@ class ExcelConverter {
       grouped[hospitalKey].departments[departmentKey].doctors.push({
         id: doctorId,
         name: doctor.doctorName,
-        title: doctor.title,
-        specialty: doctor.specialty,
-        experience: doctor.experience,
-        education: doctor.education,
-        phone: doctor.phone,
-        schedule: doctor.schedule,
-        introduction: doctor.introduction
+        photo: doctor.doctorPhoto,
+        title: doctor.doctorTitle,
+        specialties: doctor.specialties,
+        introduction: doctor.introduction,
+        // 保持向后兼容
+        specialty: doctor.specialty
       });
     });
     

@@ -8,6 +8,7 @@ Page({
   data: {
     doctorId: null,
     doctorInfo: {},
+    specialtiesList: [],
     loading: true,
     error: null
   },
@@ -54,8 +55,13 @@ Page({
         return
       }
 
+      // 处理擅长病症列表
+      const specialtiesList = doctorInfo.specialties ? 
+        doctorInfo.specialties.split(/[、，,]/).filter(item => item.trim()) : [];
+
       this.setData({
         doctorInfo: doctorInfo,
+        specialtiesList: specialtiesList,
         loading: false
       })
 
@@ -67,34 +73,15 @@ Page({
   },
 
   /**
-   * 拨打电话
+   * 显示联系信息
    */
-  makePhoneCall() {
-    if (!this.data.doctorInfo.phone) {
-      wx.showToast({
-        title: '暂无联系电话',
-        icon: 'error'
-      })
-      return
-    }
-
+  showContactInfo() {
+    const hospitalName = this.data.doctorInfo.hospitalName || '医院';
     wx.showModal({
-      title: '拨打电话',
-      content: `确定要拨打 ${this.data.doctorInfo.phone} 吗？`,
-      success: (res) => {
-        if (res.confirm) {
-          wx.makePhoneCall({
-            phoneNumber: this.data.doctorInfo.phone,
-            fail: (err) => {
-              wx.showToast({
-                title: '拨打失败',
-                icon: 'error'
-              })
-              console.error('拨打电话失败：', err)
-            }
-          })
-        }
-      }
+      title: '联系医院',
+      content: `请联系${hospitalName}相关科室进行预约挂号和咨询。建议通过医院官方渠道或现场挂号。`,
+      confirmText: '知道了',
+      showCancel: false
     })
   },
 
