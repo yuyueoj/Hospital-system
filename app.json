@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/departments/departments", 
+    "pages/doctors/doctors",
+    "pages/doctor-detail/doctor-detail",
+    "pages/search/search"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4a90e2",
+    "navigationBarTitleText": "医生信息查询",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f8f9fa"
+  },
+  "tabBar": {
+    "color": "#666",
+    "selectedColor": "#4a90e2",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "医院",
+        "iconPath": "images/hospital.png",
+        "selectedIconPath": "images/hospital-active.png"
+      },
+      {
+        "pagePath": "pages/search/search", 
+        "text": "搜索",
+        "iconPath": "images/search.png",
+        "selectedIconPath": "images/search-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

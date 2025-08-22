@@ -1,0 +1,214 @@
+/* pages/doctors/doctors.wxss */
+.container {
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: white;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.breadcrumb-item {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.breadcrumb-item.current {
+  color: #4a90e2;
+  font-weight: 500;
+}
+
+.separator {
+  margin: 0 12rpx;
+  color: #999;
+  font-size: 20rpx;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30rpx;
+  padding: 20rpx 0;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+.doctors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.doctor-item {
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.doctor-item:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.12);
+}
+
+.doctor-card {
+  display: flex;
+  padding: 24rpx;
+  align-items: center;
+}
+
+.doctor-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.avatar-text {
+  font-size: 36rpx;
+  color: white;
+  font-weight: bold;
+}
+
+.doctor-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.doctor-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 4rpx;
+}
+
+.doctor-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.doctor-title {
+  font-size: 22rpx;
+  color: #4a90e2;
+  background: #e3f2fd;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+}
+
+.doctor-specialty {
+  font-size: 26rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.doctor-experience {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.doctor-schedule {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 4rpx;
+}
+
+.schedule-icon {
+  margin-right: 8rpx;
+  font-size: 22rpx;
+}
+
+.doctor-arrow {
+  font-size: 20rpx;
+  color: #999;
+  margin-left: 16rpx;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.doctor-item:active .doctor-arrow {
+  transform: rotate(90deg);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx;
+  border-top: 1rpx solid #eee;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.back-button {
+  width: 100%;
+  height: 80rpx;
+  background: #f8f9fa;
+  color: #666;
+  border: 1rpx solid #dee2e6;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  text-align: center;
+}
+
+.back-button:active {
+  background: #e9ecef;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .doctor-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .doctor-avatar {
+    margin-right: 0;
+    margin-bottom: 20rpx;
+  }
+  
+  .doctor-header {
+    justify-content: center;
+  }
+}

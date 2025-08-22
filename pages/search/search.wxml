@@ -1,0 +1,107 @@
+<!--pages/search/search.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <input 
+        class="search-input" 
+        type="text" 
+        placeholder="搜索医生、科室或医院" 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
+        focus="{{searchFocus}}"
+      />
+      <view class="search-icon" bindtap="performSearch">🔍</view>
+    </view>
+    <button class="search-button" bindtap="performSearch">搜索</button>
+  </view>
+
+  <!-- 搜索建议 -->
+  <view class="search-suggestions" wx:if="{{showSuggestions && suggestions.length > 0}}">
+    <view class="suggestions-title">搜索建议</view>
+    <view class="suggestions-list">
+      <view 
+        class="suggestion-item" 
+        wx:for="{{suggestions}}" 
+        wx:key="{{index}}"
+        bindtap="selectSuggestion"
+        data-keyword="{{item}}"
+      >
+        <text class="suggestion-text">{{item}}</text>
+        <text class="suggestion-icon">🔍</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索历史 -->
+  <view class="search-history" wx:if="{{!showSuggestions && searchHistory.length > 0 && !searchResults.length}}">
+    <view class="history-header">
+      <text class="history-title">搜索历史</text>
+      <button class="clear-history" bindtap="clearHistory">清空</button>
+    </view>
+    <view class="history-list">
+      <view 
+        class="history-item" 
+        wx:for="{{searchHistory}}" 
+        wx:key="{{index}}"
+        bindtap="selectHistory"
+        data-keyword="{{item}}"
+      >
+        <text class="history-text">{{item}}</text>
+        <text class="history-icon">⏱</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view class="search-results" wx:if="{{searchResults.length > 0}}">
+    <view class="results-header">
+      <text class="results-title">搜索结果 ({{searchResults.length}})</text>
+    </view>
+    <view class="results-list">
+      <view 
+        class="result-item" 
+        wx:for="{{searchResults}}" 
+        wx:key="id"
+        bindtap="selectDoctor"
+        data-doctor-id="{{item.id}}"
+      >
+        <view class="result-card">
+          <view class="doctor-avatar">
+            <text class="avatar-text">{{item.name.charAt(0)}}</text>
+          </view>
+          <view class="doctor-info">
+            <view class="doctor-name">{{item.name}}</view>
+            <view class="doctor-title">{{item.title}}</view>
+            <view class="doctor-location">
+              <text class="location-text">{{item.hospitalName}} - {{item.departmentName}}</text>
+            </view>
+            <view class="doctor-specialty">{{item.specialty}}</view>
+          </view>
+          <view class="result-arrow">▶</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无搜索结果 -->
+  <view class="no-results" wx:if="{{searched && searchResults.length === 0}}">
+    <view class="no-results-icon">🔍</view>
+    <text class="no-results-text">未找到相关医生信息</text>
+    <text class="no-results-tip">请尝试其他关键词</text>
+  </view>
+
+  <!-- 默认状态 -->
+  <view class="default-state" wx:if="{{!searched && !showSuggestions && searchHistory.length === 0}}">
+    <view class="default-icon">👩‍⚕️</view>
+    <text class="default-text">输入关键词搜索医生</text>
+    <text class="default-tip">支持搜索医生姓名、科室、医院等</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{searching}}">
+    <text>搜索中...</text>
+  </view>
+</view>

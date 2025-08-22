@@ -1,0 +1,85 @@
+<!--pages/doctor-detail/doctor-detail.wxml-->
+<view class="container">
+  <!-- 医生头部信息 -->
+  <view class="doctor-header">
+    <view class="doctor-avatar-large">
+      <text class="avatar-text">{{doctorInfo.name.charAt(0)}}</text>
+    </view>
+    <view class="doctor-basic-info">
+      <view class="doctor-name">{{doctorInfo.name}}</view>
+      <view class="doctor-title">{{doctorInfo.title}}</view>
+      <view class="doctor-specialty">{{doctorInfo.specialty}}</view>
+    </view>
+  </view>
+
+  <!-- 医生详细信息 -->
+  <view class="info-sections">
+    <!-- 基本信息 -->
+    <view class="info-section">
+      <view class="section-title">基本信息</view>
+      <view class="info-items">
+        <view class="info-item">
+          <text class="label">所属医院：</text>
+          <text class="value">{{doctorInfo.hospitalName}}</text>
+        </view>
+        <view class="info-item">
+          <text class="label">所属科室：</text>
+          <text class="value">{{doctorInfo.departmentName}}</text>
+        </view>
+        <view class="info-item">
+          <text class="label">从业经验：</text>
+          <text class="value">{{doctorInfo.experience}}</text>
+        </view>
+        <view class="info-item">
+          <text class="label">毕业院校：</text>
+          <text class="value">{{doctorInfo.education}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="info-section">
+      <view class="section-title">联系方式</view>
+      <view class="info-items">
+        <view class="info-item contact-item" bindtap="makePhoneCall">
+          <text class="label">联系电话：</text>
+          <text class="value phone-number">{{doctorInfo.phone}}</text>
+          <text class="call-icon">📞</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 出诊时间 -->
+    <view class="info-section">
+      <view class="section-title">出诊时间</view>
+      <view class="schedule-info">
+        <text class="schedule-text">{{doctorInfo.schedule}}</text>
+      </view>
+    </view>
+
+    <!-- 医生简介 -->
+    <view class="info-section">
+      <view class="section-title">医生简介</view>
+      <view class="introduction">
+        <text class="introduction-text">{{doctorInfo.introduction}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作区 -->
+  <view class="bottom-actions">
+    <button class="action-button secondary" bindtap="goBack">返回列表</button>
+    <button class="action-button primary" bindtap="makePhoneCall">立即咨询</button>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error}}">
+    <text>{{error}}</text>
+    <button class="retry-button" bindtap="retry">重试</button>
+  </view>
+</view>

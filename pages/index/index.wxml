@@ -1,0 +1,45 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header">
+    <text class="title">选择医院</text>
+    <text class="subtitle">请选择您要查询的医院</text>
+  </view>
+
+  <!-- 医院列表 -->
+  <view class="hospital-list">
+    <view 
+      class="hospital-item" 
+      wx:for="{{hospitals}}" 
+      wx:key="id"
+      bindtap="selectHospital"
+      data-hospital-id="{{item.id}}"
+    >
+      <view class="hospital-card">
+        <view class="hospital-image">
+          <image src="{{item.image || '/images/default-hospital.png'}}" mode="aspectFill"></image>
+        </view>
+        <view class="hospital-info">
+          <view class="hospital-name">{{item.name}}</view>
+          <view class="hospital-address">
+            <text class="icon">📍</text>
+            <text>{{item.address}}</text>
+          </view>
+          <view class="hospital-phone">
+            <text class="icon">📞</text>
+            <text>{{item.phone}}</text>
+          </view>
+          <view class="hospital-departments">
+            <text class="departments-count">{{item.departments.length}}个科室</text>
+            <view class="arrow">▶</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{hospitals.length === 0}}">
+    <text class="empty-text">暂无医院数据</text>
+  </view>
+</view>

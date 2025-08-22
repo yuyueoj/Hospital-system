@@ -1,0 +1,55 @@
+<!--pages/doctors/doctors.wxml-->
+<view class="container">
+  <!-- 导航信息 -->
+  <view class="breadcrumb">
+    <text class="breadcrumb-item">{{hospitalName}}</text>
+    <text class="separator">></text>
+    <text class="breadcrumb-item current">{{departmentName}}</text>
+  </view>
+
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="title">医生列表</text>
+    <text class="subtitle">请选择您要查询的医生</text>
+  </view>
+
+  <!-- 医生列表 -->
+  <view class="doctors-list">
+    <view 
+      class="doctor-item" 
+      wx:for="{{doctors}}" 
+      wx:key="id"
+      bindtap="selectDoctor"
+      data-doctor-id="{{item.id}}"
+    >
+      <view class="doctor-card">
+        <view class="doctor-avatar">
+          <text class="avatar-text">{{item.name.charAt(0)}}</text>
+        </view>
+        <view class="doctor-info">
+          <view class="doctor-header">
+            <view class="doctor-name">{{item.name}}</view>
+            <view class="doctor-title">{{item.title}}</view>
+          </view>
+          <view class="doctor-specialty">{{item.specialty}}</view>
+          <view class="doctor-experience">从业经验：{{item.experience}}</view>
+          <view class="doctor-schedule">
+            <text class="schedule-icon">🕒</text>
+            <text>{{item.schedule}}</text>
+          </view>
+        </view>
+        <view class="doctor-arrow">▶</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{doctors.length === 0}}">
+    <text class="empty-text">该科室暂无医生信息</text>
+  </view>
+
+  <!-- 底部操作区 -->
+  <view class="bottom-actions">
+    <button class="back-button" bindtap="goBack">返回科室列表</button>
+  </view>
+</view>

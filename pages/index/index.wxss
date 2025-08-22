@@ -1,0 +1,145 @@
+/* pages/index/index.wxss */
+.container {
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40rpx;
+  padding: 40rpx 0;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+}
+
+.hospital-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.hospital-item {
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.hospital-item:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.12);
+}
+
+.hospital-card {
+  display: flex;
+  padding: 24rpx;
+}
+
+.hospital-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.hospital-image image {
+  width: 100%;
+  height: 100%;
+  background-color: #e9ecef;
+}
+
+.hospital-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hospital-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+  line-height: 1.4;
+}
+
+.hospital-address,
+.hospital-phone {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  line-height: 1.4;
+}
+
+.icon {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+
+.hospital-departments {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12rpx;
+  padding-top: 12rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.departments-count {
+  font-size: 24rpx;
+  color: #4a90e2;
+  font-weight: 500;
+}
+
+.arrow {
+  font-size: 20rpx;
+  color: #999;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.hospital-item:active .arrow {
+  transform: rotate(90deg);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .hospital-card {
+    flex-direction: column;
+  }
+  
+  .hospital-image {
+    width: 100%;
+    height: 200rpx;
+    margin-right: 0;
+    margin-bottom: 20rpx;
+  }
+}

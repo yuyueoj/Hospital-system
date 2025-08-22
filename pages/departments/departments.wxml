@@ -1,0 +1,51 @@
+<!--pages/departments/departments.wxml-->
+<view class="container">
+  <!-- 医院信息头部 -->
+  <view class="hospital-header">
+    <view class="hospital-info">
+      <text class="hospital-name">{{hospitalName}}</text>
+      <text class="hospital-address">{{hospitalInfo.address}}</text>
+    </view>
+  </view>
+
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="title">选择科室</text>
+    <text class="subtitle">请选择您要查询的科室</text>
+  </view>
+
+  <!-- 科室列表 -->
+  <view class="departments-list">
+    <view 
+      class="department-item" 
+      wx:for="{{departments}}" 
+      wx:key="id"
+      bindtap="selectDepartment"
+      data-department-id="{{item.id}}"
+    >
+      <view class="department-card">
+        <view class="department-icon">
+          <text class="icon">🏥</text>
+        </view>
+        <view class="department-info">
+          <view class="department-name">{{item.name}}</view>
+          <view class="department-description">{{item.description}}</view>
+          <view class="department-stats">
+            <text class="doctors-count">{{item.doctors.length}}位医生</text>
+            <view class="arrow">▶</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{departments.length === 0}}">
+    <text class="empty-text">该医院暂无科室信息</text>
+  </view>
+
+  <!-- 底部操作区 -->
+  <view class="bottom-actions">
+    <button class="back-button" bindtap="goBack">返回医院列表</button>
+  </view>
+</view>
