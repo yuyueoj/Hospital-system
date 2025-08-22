@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医生数据在线转换工具</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            transition: border-color 0.3s ease;
+        }
+
+        .step.active {
+            border-color: #4a90e2;
+            background: #f8f9ff;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-number {
+            background: #4a90e2;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-button {
+            background: #4a90e2;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .file-input-button:hover {
+            background: #357abd;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a90e2, #357abd);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .result-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .error-list {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .error-item {
+            color: #c53030;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .warning-list {
+            background: #fffbf0;
+            border: 1px solid #fed7aa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .warning-item {
+            color: #c05621;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        .download-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .template-section {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .template-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .template-table th,
+        .template-table td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .template-table th {
+            background: #4a90e2;
+            color: white;
+            font-weight: bold;
+        }
+
+        .template-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .download-buttons {
+                flex-direction: column;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>医生数据在线转换工具</h1>
+            <p>将Excel文件转换为小程序可用的JSON格式</p>
+        </div>
+        
+        <div class="content">
+            <!-- 步骤1: 数据模板 -->
+            <div class="step" id="step1">
+                <div class="step-title">
+                    <div class="step-number">1</div>
+                    Excel数据格式要求
+                </div>
+                <div class="template-section">
+                    <h3>必需列（列名必须完全匹配）：</h3>
+                    <ul>
+                        <li><strong>医生姓名</strong> - 医生的姓名</li>
+                        <li><strong>医院名称</strong> - 所属医院名称</li>
+                        <li><strong>科室名称</strong> - 所属科室名称</li>
+                    </ul>
+                    
+                    <h3>可选列：</h3>
+                    <p>职称、专业领域、从业经验、毕业院校、联系电话、出诊时间、个人简介、医院地址、医院电话、科室描述</p>
+                    
+                    <h3>示例数据格式：</h3>
+                    <table class="template-table">
+                        <thead>
+                            <tr>
+                                <th>医生姓名</th>
+                                <th>医院名称</th>
+                                <th>科室名称</th>
+                                <th>职称</th>
+                                <th>专业领域</th>
+                                <th>联系电话</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>张医生</td>
+                                <td>北京协和医院</td>
+                                <td>心血管内科</td>
+                                <td>主任医师</td>
+                                <td>心血管疾病</td>
+                                <td>010-12345678</td>
+                            </tr>
+                            <tr>
+                                <td>李医生</td>
+                                <td>北京协和医院</td>
+                                <td>消化内科</td>
+                                <td>副主任医师</td>
+                                <td>消化系统疾病</td>
+                                <td>010-87654321</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 步骤2: 上传文件 -->
+            <div class="step" id="step2">
+                <div class="step-title">
+                    <div class="step-number">2</div>
+                    上传Excel文件
+                </div>
+                <div class="file-input-wrapper">
+                    <label for="excelFile" class="file-input-button">
+                        📁 选择Excel文件
+                    </label>
+                    <input type="file" id="excelFile" class="file-input" accept=".xlsx,.xls" />
+                </div>
+                <div id="fileInfo" class="file-info hidden"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- 步骤3: 数据验证结果 -->
+            <div class="step" id="step3">
+                <div class="step-title">
+                    <div class="step-number">3</div>
+                    数据验证结果
+                </div>
+                <div id="validationResult" class="result-area hidden">
+                    <div class="stats" id="statsContainer"></div>
+                    <div id="errorContainer"></div>
+                    <div id="warningContainer"></div>
+                </div>
+            </div>
+
+            <!-- 步骤4: 下载转换结果 -->
+            <div class="step" id="step4">
+                <div class="step-title">
+                    <div class="step-number">4</div>
+                    下载转换结果
+                </div>
+                <div id="downloadSection" class="hidden">
+                    <div class="download-buttons">
+                        <button id="downloadJson" class="download-btn">📄 下载JSON文件</button>
+                        <button id="downloadAppJs" class="download-btn">📝 下载App.js格式</button>
+                        <button id="downloadReport" class="download-btn">📊 下载验证报告</button>
+                    </div>
+                    <div id="previewSection" class="result-area" style="margin-top: 20px;">
+                        <h4>数据预览：</h4>
+                        <pre id="dataPreview"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class OnlineConverter {
+            constructor() {
+                this.hospitalData = [];
+                this.validationResult = null;
+                this.init();
+            }
+
+            init() {
+                document.getElementById('excelFile').addEventListener('change', this.handleFileSelect.bind(this));
+                document.getElementById('downloadJson').addEventListener('click', this.downloadJson.bind(this));
+                document.getElementById('downloadAppJs').addEventListener('click', this.downloadAppJs.bind(this));
+                document.getElementById('downloadReport').addEventListener('click', this.downloadReport.bind(this));
+            }
+
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                this.showFileInfo(file);
+                this.processFile(file);
+            }
+
+            showFileInfo(file) {
+                const fileInfo = document.getElementById('fileInfo');
+                fileInfo.className = 'file-info';
+                fileInfo.innerHTML = `
+                    <strong>文件信息：</strong><br>
+                    文件名：${file.name}<br>
+                    文件大小：${(file.size / 1024).toFixed(2)} KB<br>
+                    文件类型：${file.type}
+                `;
+                
+                document.getElementById('step2').classList.add('active');
+            }
+
+            async processFile(file) {
+                try {
+                    this.updateProgress(20);
+                    
+                    const data = await this.readExcelFile(file);
+                    this.updateProgress(50);
+                    
+                    const validation = this.validateData(data);
+                    this.updateProgress(70);
+                    
+                    if (validation.isValid) {
+                        this.hospitalData = this.convertData(validation.data);
+                        this.updateProgress(100);
+                        this.showSuccess();
+                    } else {
+                        this.showValidationErrors(validation);
+                    }
+                    
+                } catch (error) {
+                    this.showError(error.message);
+                }
+            }
+
+            readExcelFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                            const sheetName = workbook.SheetNames[0];
+                            const worksheet = workbook.Sheets[sheetName];
+                            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                            resolve(jsonData);
+                        } catch (error) {
+                            reject(new Error('Excel文件读取失败：' + error.message));
+                        }
+                    };
+                    reader.onerror = () => reject(new Error('文件读取失败'));
+                    reader.readAsBinaryString(file);
+                });
+            }
+
+            validateData(data) {
+                const errors = [];
+                const warnings = [];
+                const stats = {
+                    totalRows: data.length,
+                    validRows: 0,
+                    invalidRows: 0,
+                    duplicates: 0
+                };
+
+                const requiredFields = ['医生姓名', '医院名称', '科室名称'];
+                const validData = [];
+                const seenDoctors = new Set();
+
+                data.forEach((row, index) => {
+                    const rowNumber = index + 2;
+                    let isValid = true;
+
+                    // 检查必填字段
+                    requiredFields.forEach(field => {
+                        if (!row[field] || row[field].toString().trim() === '') {
+                            errors.push(`第${rowNumber}行: 缺少必填字段 "${field}"`);
+                            isValid = false;
+                        }
+                    });
+
+                    // 检查数据格式
+                    if (row['联系电话'] && !this.validatePhone(row['联系电话'])) {
+                        errors.push(`第${rowNumber}行: 联系电话格式不正确`);
+                    }
+
+                    if (isValid) {
+                        // 检查重复数据
+                        const doctorKey = `${row['医院名称']}-${row['科室名称']}-${row['医生姓名']}`;
+                        if (seenDoctors.has(doctorKey)) {
+                            warnings.push(`第${rowNumber}行: 发现重复医生数据`);
+                            stats.duplicates++;
+                        } else {
+                            seenDoctors.add(doctorKey);
+                            validData.push(row);
+                            stats.validRows++;
+                        }
+                    } else {
+                        stats.invalidRows++;
+                    }
+                });
+
+                return {
+                    isValid: errors.length === 0,
+                    data: validData,
+                    errors,
+                    warnings,
+                    stats
+                };
+            }
+
+            validatePhone(phone) {
+                const phoneRegex = /^[\d\-\s\(\)]+$/;
+                const cleanPhone = phone.toString().replace(/[\s\-\(\)]/g, '');
+                return phoneRegex.test(phone) && cleanPhone.length >= 7 && cleanPhone.length <= 15;
+            }
+
+            convertData(data) {
+                const grouped = {};
+                
+                data.forEach(doctor => {
+                    const hospitalKey = doctor['医院名称'];
+                    const departmentKey = doctor['科室名称'];
+                    
+                    if (!grouped[hospitalKey]) {
+                        grouped[hospitalKey] = {
+                            hospitalName: doctor['医院名称'],
+                            hospitalAddress: doctor['医院地址'] || '',
+                            hospitalPhone: doctor['医院电话'] || '',
+                            departments: {}
+                        };
+                    }
+                    
+                    if (!grouped[hospitalKey].departments[departmentKey]) {
+                        grouped[hospitalKey].departments[departmentKey] = {
+                            departmentName: doctor['科室名称'],
+                            departmentDescription: doctor['科室描述'] || `${doctor['科室名称']}专业诊疗`,
+                            doctors: []
+                        };
+                    }
+                    
+                    const doctorId = this.generateDoctorId(doctor);
+                    
+                    grouped[hospitalKey].departments[departmentKey].doctors.push({
+                        id: doctorId,
+                        name: doctor['医生姓名'],
+                        title: doctor['职称'] || '医师',
+                        specialty: doctor['专业领域'] || doctor['科室名称'],
+                        experience: doctor['从业经验'] || '多年',
+                        education: doctor['毕业院校'] || '医学院校',
+                        phone: doctor['联系电话'] || '',
+                        schedule: doctor['出诊时间'] || '请咨询医院',
+                        introduction: doctor['个人简介'] || '经验丰富的医疗专家'
+                    });
+                });
+                
+                // 转换为最终格式
+                const hospitals = [];
+                let hospitalId = 1;
+                let departmentId = 100;
+                
+                for (const [hospitalKey, hospitalInfo] of Object.entries(grouped)) {
+                    const hospital = {
+                        id: hospitalId++,
+                        name: hospitalInfo.hospitalName,
+                        address: hospitalInfo.hospitalAddress || `${hospitalInfo.hospitalName}地址`,
+                        phone: hospitalInfo.hospitalPhone || '请联系医院',
+                        image: `/images/hospital${hospitalId}.jpg`,
+                        departments: []
+                    };
+                    
+                    for (const [departmentKey, departmentInfo] of Object.entries(hospitalInfo.departments)) {
+                        hospital.departments.push({
+                            id: departmentId++,
+                            name: departmentInfo.departmentName,
+                            description: departmentInfo.departmentDescription,
+                            doctors: departmentInfo.doctors
+                        });
+                    }
+                    
+                    hospitals.push(hospital);
+                }
+                
+                return hospitals;
+            }
+
+            generateDoctorId(doctor) {
+                const str = doctor['医院名称'] + doctor['科室名称'] + doctor['医生姓名'];
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return 1000 + (Math.abs(hash) % 9000);
+            }
+
+            updateProgress(percent) {
+                document.getElementById('progressFill').style.width = percent + '%';
+            }
+
+            showValidationErrors(validation) {
+                this.validationResult = validation;
+                
+                document.getElementById('step3').classList.add('active');
+                document.getElementById('validationResult').classList.remove('hidden');
+                
+                // 显示统计信息
+                const statsHtml = `
+                    <div class="stat-item">
+                        <div class="stat-number">${validation.stats.totalRows}</div>
+                        <div class="stat-label">总行数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${validation.stats.validRows}</div>
+                        <div class="stat-label">有效行数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${validation.stats.invalidRows}</div>
+                        <div class="stat-label">无效行数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${validation.errors.length}</div>
+                        <div class="stat-label">错误数量</div>
+                    </div>
+                `;
+                document.getElementById('statsContainer').innerHTML = statsHtml;
+                
+                // 显示错误信息
+                if (validation.errors.length > 0) {
+                    const errorHtml = `
+                        <div class="error-list">
+                            <h4>❌ 数据错误：</h4>
+                            ${validation.errors.slice(0, 10).map(error => `<div class="error-item">${error}</div>`).join('')}
+                            ${validation.errors.length > 10 ? `<div class="error-item">... 还有 ${validation.errors.length - 10} 个错误</div>` : ''}
+                        </div>
+                    `;
+                    document.getElementById('errorContainer').innerHTML = errorHtml;
+                }
+                
+                // 显示警告信息
+                if (validation.warnings.length > 0) {
+                    const warningHtml = `
+                        <div class="warning-list">
+                            <h4>⚠️ 数据警告：</h4>
+                            ${validation.warnings.slice(0, 5).map(warning => `<div class="warning-item">${warning}</div>`).join('')}
+                            ${validation.warnings.length > 5 ? `<div class="warning-item">... 还有 ${validation.warnings.length - 5} 个警告</div>` : ''}
+                        </div>
+                    `;
+                    document.getElementById('warningContainer').innerHTML = warningHtml;
+                }
+            }
+
+            showSuccess() {
+                this.showValidationErrors({
+                    stats: {
+                        totalRows: this.hospitalData.reduce((sum, h) => sum + h.departments.reduce((dSum, d) => dSum + d.doctors.length, 0), 0),
+                        validRows: this.hospitalData.reduce((sum, h) => sum + h.departments.reduce((dSum, d) => dSum + d.doctors.length, 0), 0),
+                        invalidRows: 0,
+                        duplicates: 0
+                    },
+                    errors: [],
+                    warnings: []
+                });
+                
+                document.getElementById('step4').classList.add('active');
+                document.getElementById('downloadSection').classList.remove('hidden');
+                
+                // 显示数据预览
+                const preview = JSON.stringify(this.hospitalData.slice(0, 1), null, 2);
+                document.getElementById('dataPreview').textContent = preview + '\n// ... 更多数据';
+            }
+
+            showError(message) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-error';
+                alert.textContent = '错误：' + message;
+                document.getElementById('step2').appendChild(alert);
+            }
+
+            downloadJson() {
+                const dataStr = JSON.stringify(this.hospitalData, null, 2);
+                this.downloadFile(dataStr, 'hospital-data.json', 'application/json');
+            }
+
+            downloadAppJs() {
+                const content = `// 自动生成的医院数据 - ${new Date().toLocaleString()}
+// 请将此数据替换到 app.js 中的 globalData.hospitalData
+
+const hospitalData = ${JSON.stringify(this.hospitalData, null, 2)};
+
+module.exports = hospitalData;
+
+// 使用方法:
+// 1. 复制上面的 hospitalData 数组
+// 2. 替换 app.js 中 globalData.hospitalData 的值
+// 3. 或者使用 require 引入: const hospitalData = require('./data/app-data.js');
+`;
+                this.downloadFile(content, 'app-data.js', 'text/javascript');
+            }
+
+            downloadReport() {
+                const report = `医生数据转换报告
+生成时间：${new Date().toLocaleString()}
+
+=== 统计信息 ===
+医院总数：${this.hospitalData.length}
+科室总数：${this.hospitalData.reduce((sum, h) => sum + h.departments.length, 0)}
+医生总数：${this.hospitalData.reduce((sum, h) => sum + h.departments.reduce((dSum, d) => dSum + d.doctors.length, 0), 0)}
+
+=== 各医院详情 ===
+${this.hospitalData.map(h => `${h.name}：${h.departments.length}个科室，${h.departments.reduce((sum, d) => sum + d.doctors.length, 0)}位医生`).join('\n')}
+
+转换完成！
+`;
+                this.downloadFile(report, 'conversion-report.txt', 'text/plain');
+            }
+
+            downloadFile(content, filename, contentType) {
+                const blob = new Blob([content], { type: contentType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        // 初始化转换器
+        new OnlineConverter();
+    </script>
+</body>
+</html>

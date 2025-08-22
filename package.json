@@ -1,0 +1,31 @@
+{
+  "name": "doctor-info-miniprogram",
+  "version": "1.0.0",
+  "description": "医生信息查询小程序数据导入工具",
+  "main": "app.js",
+  "scripts": {
+    "convert": "node tools/excel-converter.js",
+    "install-deps": "npm install xlsx fs-extra",
+    "help": "node tools/excel-converter.js --help"
+  },
+  "keywords": [
+    "miniprogram",
+    "wechat",
+    "doctor",
+    "hospital",
+    "excel",
+    "data-import"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "xlsx": "^0.18.5",
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
